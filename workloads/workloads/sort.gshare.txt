@@ -1,0 +1,75 @@
+bpred summary
+  Instructions executed: 41233909
+  Control-flow events:   9247512
+
+  type                  all code      main exe
+  cond                   8629345       8611567
+    cond taken           4079870       4072345
+  jmp_direct              238244        237451
+  jmp_indirect               222             2
+  call_direct             189755        188971
+  call_indirect               98             1
+  ret                     189848        188975
+  total                  9247512       9226967
+
+  Other control flow, not predicted: 0
+
+Predictor: gshare
+  Local history table                    10240   (1024 x 10)
+  Local pattern table                     3072   (1024 x 3)
+  Global pattern table (gshare)          32768   (16384 x 2)
+  Choice table                            8192   (4096 x 2)
+  Global history register                   14   (1 x 14)
+  Direction predictor total              54286
+  BTB                                    13312   (256 x (1 valid + 16 tag + 32 target + 3 type), 256 sets x 1 ways
+  RAS                                      517   (16 x 32 + 5-bit count)
+  Total                                  68115   (budget 98304: within)
+
+Prediction results
+  metric                                         count        MPKI
+  direction_mispredictions                     1765597     42.8191
+  wrong_next_pc_total                          1766720     42.8463
+    cause_direction                            1765339     42.8128
+    cause_btb_target                               945      0.0229
+    cause_indirect_target                           93      0.0023
+    cause_return                                   343      0.0083
+    in_main_executable                         1763472     42.7675
+    cross_region_only                                0      0.0000
+  btb_alias_hits                                     0      0.0000
+  conditional_branches                         8629345
+  direction_accuracy_percent                     79.54
+  estimated_cpi                                 1.6427
+
+  Wrong next PC by type
+  type                executed       wrong   % wrong
+  cond                 8629345     1765573     20.46
+  jmp_direct            238244         337      0.14
+  jmp_indirect             222          81     36.49
+  call_direct           189755         293      0.15
+  call_indirect             98          93     94.90
+  ret                   189848         343      0.18
+
+  RAS pushes 189853, pops 189848, overflows 39, underflows 37
+
+Top 20 branches by wrong next PC (of 1766720 in total)
+    #  pc                type             executed  taken%  dir wrong      wrong    %all    cum%  image:function
+    1  0x4012fa          cond              1567856    51.1     783901     783901    44.4    44.4  sort:search
+    2  0x40139f          cond               937025    76.0     206456     206456    11.7    56.1  sort:quicksort
+    3  0x40137f          cond               595876    67.2     188048     188046    10.6    66.7  sort:quicksort
+    4  0x40136c          cond               437379    55.3     163241     163241     9.2    75.9  sort:quicksort
+    5  0x4013d2          cond               241825    62.1      90167      90167     5.1    81.0  sort:quicksort
+    6  0x401383          cond               195554    61.9      75349      75349     4.3    85.3  sort:quicksort
+    7  0x4012f8          cond              1618060     3.1      50590      50586     2.9    88.2  sort:search
+    8  0x401126          cond               100000    49.8      50091      50091     2.8    91.0  sort:main
+    9  0x4013b7          cond               408823    85.2      38345      38346     2.2    93.2  sort:quicksort
+   10  0x401303          cond               766110    95.7      33627      33627     1.9    95.1  sort:search
+   11  0x4013a4          cond               345847     8.3      27910      27910     1.6    96.7  sort:quicksort
+   12  0x4013c4          cond                88968    48.4      17886      17886     1.0    97.7  sort:quicksort
+   13  0x4012e7          cond               801746     2.1      17235      17234     1.0    98.6  sort:search
+   14  0x401313          cond                88969    51.6      14130      14130     0.8    99.4  sort:quicksort
+   15  0x401343          cond               117524    24.3       6432       6432     0.4    99.8  sort:quicksort
+   16  0x7ffff7fd442a    cond                 1679    36.6        285        285     0.0    99.8  ld-linux-x86-64.so.2:_dl_fatal_printf
+   17  0x7ffff7fcf886    cond                  211    56.4         98         98     0.0    99.8  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   18  0x7ffff7fcf588    jmp_direct             93   100.0          0         93     0.0    99.8  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   19  0x7ffff7fd0288    ret                    93   100.0          0         93     0.0    99.8  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   20  0x7ffff7fd0146    cond                  646    92.6         75         78     0.0    99.8  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo

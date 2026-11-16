@@ -1,0 +1,94 @@
+
+bpred summary
+  Instructions executed: 41233909
+  Control-flow events:   9247512
+
+  type                  all code      main exe
+  cond                   8629345       8611567
+    cond taken           4079870       4072345
+  jmp_direct              238244        237451
+  jmp_indirect               222             2
+  call_direct             189755        188971
+  call_indirect               98             1
+  ret                     189848        188975
+  total                  9247512       9226967
+
+  Other control flow, not predicted: 0
+
+Predictor: tage
+  Bimodal base table                      8192   (4096 x 2)
+  Tagged tables                          43008   (6 x 512 x (3 ctr + 2 u + tag); histories 4,8,17,37,77,160; tags 8,8,9,9,10,10)
+  Global + path history                    176   (160 + 16)
+  Folded-history registers                 172   
+  USE_ALT + aging tick                      22   (4 + 18)
+  Loop predictor                           615   (16 x 38 + 7-bit USE_LOOP)
+  Statistical corrector                   6158   (bias 512 x 6 + 2 x 256 x 6 + theta 8 + TC 6)
+  Direction predictor total              58343   
+  BTB                                    13824   (256 x (1 valid + 16 tag + 32 target + 3 type + 2 LRU), 64 sets x 4 ways
+  RAS                                     2055   (64 x 32 + 7-bit count)
+  Indirect target predictor              22030   (512 x (1 valid + 8 tag + 32 target + 2 LRU) + 14-bit path history, 128 sets x 4 ways, folded index; also uses 8 GHR bits)
+  Total                                  96252   (budget 98304: within)
+
+Prediction results
+  metric                                         count        MPKI
+  direction_mispredictions                     1691955     41.0331
+  wrong_next_pc_total                          1692778     41.0531
+    cause_direction                            1691744     41.0280
+    cause_btb_target                               693      0.0168
+    cause_indirect_target                          101      0.0024
+    cause_return                                   240      0.0058
+    in_main_executable                         1690068     40.9873
+    cross_region_only                                0      0.0000
+  btb_alias_hits                                     0      0.0000
+  conditional_branches                         8629345
+  direction_accuracy_percent                     80.39
+  estimated_cpi                                 1.6158
+
+  Wrong next PC by type
+  type                executed       wrong   % wrong
+  cond                 8629345     1691856     19.61
+  jmp_direct            238244         225      0.09
+  jmp_indirect             222          80     36.04
+  call_direct           189755         285      0.15
+  call_indirect             98          92     93.88
+  ret                   189848         240      0.13
+
+  TAGE provider (conditional branches)   predictions   TAGE wrong   wrong%
+    bimodal (no tag match)                    762127        20201     2.65
+    table 1 (history 4)                      2237157       471729    21.09
+    table 2 (history 8)                      4318863       895306    20.73
+    table 3 (history 17)                     1044248       297629    28.50
+    table 4 (history 37)                      154047        20312    13.19
+    table 5 (history 77)                       55400         3714     6.70
+    table 6 (history 160)                      57503         3077     5.35
+    alternate used for a weak provider: 852931 of 8629345
+  Loop predictor overrode TAGE 7 times, right 2
+  Statistical corrector overrode 839846 times, right 429931; final theta 8
+  RAS pushes 189853, pops 189848, overflows 0, underflows 0
+  Indirect target predictor lookups 249, hits 41
+
+Top 20 branches by wrong next PC (of 1692778 in total)
+  wrong% = wrong / executed. bias% (conditional branches) = how often the
+  branch goes its less common way, i.e. the error of always guessing its
+  common direction; wrong% near bias% means history isn't helping.
+    #  pc                type             executed  taken%  dir wrong      wrong  wrong%  bias%   %all   cum%  image:function
+    1  0x4012fa          cond              1567856    51.1     783422     783422    50.0   48.9   46.3   46.3  sort:search
+    2  0x40139f          cond               937025    76.0     198892     198892    21.2   24.0   11.7   58.0  sort:quicksort
+    3  0x40137f          cond               595876    67.2     177444     177444    29.8   32.8   10.5   68.5  sort:quicksort
+    4  0x40136c          cond               437379    55.3     153700     153700    35.1   44.7    9.1   77.6  sort:quicksort
+    5  0x4013d2          cond               241825    62.1      84008      84008    34.7   37.9    5.0   82.6  sort:quicksort
+    6  0x401383          cond               195554    61.9      67967      67967    34.8   38.1    4.0   86.6  sort:quicksort
+    7  0x4012f8          cond              1618060     3.1      50505      50505     3.1    3.1    3.0   89.6  sort:search
+    8  0x401126          cond               100000    49.8      49663      49663    49.7   49.8    2.9   92.5  sort:main
+    9  0x401303          cond               766110    95.7      33253      33253     4.3    4.3    2.0   94.5  sort:search
+   10  0x4013b7          cond               408823    85.2      32552      32553     8.0   14.8    1.9   96.4  sort:quicksort
+   11  0x4013a4          cond               345847     8.3      26424      26424     7.6    8.3    1.6   97.9  sort:quicksort
+   12  0x4012e7          cond               801746     2.1      17116      17116     2.1    2.1    1.0   98.9  sort:search
+   13  0x4013c4          cond                88968    48.4       9334       9334    10.5   48.4    0.6   99.5  sort:quicksort
+   14  0x401313          cond                88969    51.6       5485       5485     6.2   48.4    0.3   99.8  sort:quicksort
+   15  0x7ffff7fd442a    cond                 1679    36.6        276        276    16.4   36.6    0.0   99.8  ld-linux-x86-64.so.2:_dl_fatal_printf
+   16  0x401343          cond               117524    24.3        257        257     0.2   24.3    0.0   99.9  sort:quicksort
+   17  0x7ffff7fcf886    cond                  211    56.4         91         92    43.6   43.6    0.0   99.9  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   18  0x7ffff7fd0146    cond                  646    92.6         55         56     8.7    7.4    0.0   99.9  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   19  0x7ffff7fd0126    cond                  691     6.5         51         49     7.1    6.5    0.0   99.9  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   20  0x7ffff7fd4d4a    call_indirect          47   100.0          0         47   100.0      -    0.0   99.9  ld-linux-x86-64.so.2:_dl_fatal_printf
