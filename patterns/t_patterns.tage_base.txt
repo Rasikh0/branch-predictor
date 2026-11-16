@@ -1,0 +1,109 @@
+bpred summary
+  Instructions executed: 47045010
+  Control-flow events:   7920502
+
+  type                  all code      main exe
+  cond                   7717747       7700005
+    cond taken           7600445       7592935
+  jmp_direct                 788             2
+  jmp_indirect               216             2
+  call_direct             100780        100002
+  call_indirect               98             1
+  ret                     100873        100006
+  total                  7920502       7900018
+
+  Other control flow, not predicted: 0
+
+Predictor: tage_base
+  Bimodal base table                      8192   (4096 x 2)
+  Tagged tables                          43008   (6 x 512 x (3 ctr + 2 u + tag); histories 4,8,17,37,77,160; tags 8,8,9,9,10,10)
+  Global + path history                    176   (160 + 16)
+  Folded-history registers                 156   
+  USE_ALT + aging tick                      22   (4 + 18)
+  Direction predictor total              51554   
+  BTB                                    13824   (256 x (1 valid + 16 tag + 32 target + 3 type + 2 LRU), 64 sets x 4 ways
+  RAS                                     2055   (64 x 32 + 7-bit count)
+  Indirect target predictor              22030   (512 x (1 valid + 8 tag + 32 target + 2 LRU) + 14-bit path history, 128 sets x 4 ways, folded index; also uses 8 GHR bits)
+  Total                                  89463   (budget 98304: within)
+
+Prediction results
+  metric                                         count        MPKI
+  direction_mispredictions                       45072      0.9581
+  wrong_next_pc_total                            45977      0.9773
+    cause_direction                              44989      0.9563
+    cause_btb_target                               642      0.0136
+    cause_indirect_target                          102      0.0022
+    cause_return                                   244      0.0052
+    in_main_executable                           43338      0.9212
+    cross_region_only                                0      0.0000
+  btb_alias_hits                                     0      0.0000
+  conditional_branches                         7717747
+  direction_accuracy_percent                     99.42
+  estimated_cpi                                 1.0147
+
+  Wrong next PC by type
+  type                executed       wrong   % wrong
+  cond                 7717747       45053      0.58
+  jmp_direct               788         221     28.05
+  jmp_indirect             216          81     37.50
+  call_direct           100780         286      0.28
+  call_indirect             98          92     93.88
+  ret                   100873         244      0.24
+
+  TAGE provider (conditional branches)   predictions   TAGE wrong   wrong%
+    bimodal (no tag match)                    382419         1037     0.27
+    table 1 (history 4)                       117238          219     0.19
+    table 2 (history 8)                       522333          226     0.04
+    table 3 (history 17)                     1025222          202     0.02
+    table 4 (history 37)                     1093368          157     0.01
+    table 5 (history 77)                     1689135         1452     0.09
+    table 6 (history 160)                    2888032        41779     1.45
+    alternate used for a weak provider: 11973 of 7717747
+  RAS pushes 100878, pops 100873, overflows 0, underflows 0
+  Indirect target predictor lookups 243, hits 39
+
+Top 40 branches by wrong next PC (of 45977 in total)
+  wrong% = wrong / executed. bias% (conditional branches) = how often the
+  branch goes its less common way, i.e. the error of always guessing its
+  common direction; wrong% near bias% means history isn't helping.
+    #  pc                type             executed  taken%  dir wrong      wrong  wrong%  bias%   %all   cum%  image:function
+    1  0x4012bb          cond              6000000    99.7      20182      20182     0.3    0.3   43.9   43.9  t_patterns:loop_300
+    2  0x401346          cond                20000    49.8      10062      10062    50.3   49.8   21.9   65.8  t_patterns:random_50
+    3  0x4012c6          cond                20000    49.9       9953       9953    49.8   49.9   21.6   87.4  t_patterns:corr_30
+    4  0x401327          cond                20000    15.0       3080       3080    15.4   15.0    6.7   94.1  t_patterns:biased_85
+    5  0x7ffff7fd442a    cond                 1679    36.6        274        274    16.3   36.6    0.6   94.7  ld-linux-x86-64.so.2:_dl_fatal_printf
+    6  0x7ffff7fcf886    cond                  211    56.4         86         87    41.2   43.6    0.2   94.9  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+    7  0x7ffff7fd0146    cond                  646    92.6         55         56     8.7    7.4    0.1   95.0  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+    8  0x7ffff7fd0126    cond                  691     6.5         49         49     7.1    6.5    0.1   95.1  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+    9  0x7ffff7fd4d4a    call_indirect          47   100.0          0         47   100.0      -    0.1   95.2  ld-linux-x86-64.so.2:_dl_fatal_printf
+   10  0x7ffff7fec579    jmp_indirect           48   100.0          0         36    75.0      -    0.1   95.3  ld-linux-x86-64.so.2:_dl_mcount
+   11  0x7ffff7fec4f3    cond                  162    21.0         32         34    21.0   21.0    0.1   95.4  ld-linux-x86-64.so.2:_dl_mcount
+   12  0x7ffff7fd4436    cond                 1679    98.3         30         30     1.8    1.7    0.1   95.5  ld-linux-x86-64.so.2:_dl_fatal_printf
+   13  0x7ffff7fcf60a    cond                  203    45.3         25         26    12.8   45.3    0.1   95.5  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   14  0x401289          cond              1000000    98.0         21         21     0.0    2.0    0.0   95.6  t_patterns:loop_50
+   15  0x7ffff7fd4b4e    jmp_indirect          105   100.0          0         18    17.1      -    0.0   95.6  ld-linux-x86-64.so.2:_dl_fatal_printf
+   16  0x7ffff7fcf3ef    cond                   92    67.4         17         17    18.5   32.6    0.0   95.6  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   17  0x7ffff7fddc05    cond                  324    18.5         17         17     5.2   18.5    0.0   95.7  ld-linux-x86-64.so.2:__tls_get_addr
+   18  0x7ffff7fec55a    cond                   48    45.8         20         17    35.4   45.8    0.0   95.7  ld-linux-x86-64.so.2:_dl_mcount
+   19  0x7ffff7fec526    cond                  122    89.3         16         16    13.1   10.7    0.0   95.7  ld-linux-x86-64.so.2:_dl_mcount
+   20  0x7ffff7fed8f0    cond                   53    50.9         14         14    26.4   49.1    0.0   95.8  ld-linux-x86-64.so.2:_dl_mcount
+   21  0x7ffff7fda9a7    cond                   41    75.6         13         13    31.7   24.4    0.0   95.8  ld-linux-x86-64.so.2:__tunable_is_initia
+   22  0x7ffff7fdac43    cond                   33    42.4         14         13    39.4   42.4    0.0   95.8  ld-linux-x86-64.so.2:__tunable_get_val
+   23  0x7ffff7fcd3b3    cond                   30    66.7         12         12    40.0   33.3    0.0   95.9  ld-linux-x86-64.so.2:__nptl_change_stack
+   24  0x7ffff7fd4a4a    cond                   90     7.8         11         11    12.2    7.8    0.0   95.9  ld-linux-x86-64.so.2:_dl_fatal_printf
+   25  0x7ffff7fddbf3    cond                  108    22.2          8          8     7.4   22.2    0.0   95.9  ld-linux-x86-64.so.2:__tls_get_addr
+   26  0x7ffff7fe527b    cond                   18    72.2          8          8    44.4   27.8    0.0   95.9  ld-linux-x86-64.so.2:_dl_mcount
+   27  0x7ffff7fec558    cond                   53     9.4          7          7    13.2    9.4    0.0   95.9  ld-linux-x86-64.so.2:_dl_mcount
+   28  0x7ffff7fd4a28    cond                  105    14.3          7          7     6.7   14.3    0.0   96.0  ld-linux-x86-64.so.2:_dl_fatal_printf
+   29  0x7ffff7fec4f8    cond                  128     4.7          7          7     5.5    4.7    0.0   96.0  ld-linux-x86-64.so.2:_dl_mcount
+   30  0x4012f9          cond               600000    96.7          7          7     0.0    3.3    0.0   96.0  t_patterns:corr_30
+   31  0x7ffff7fdae79    cond                   56    10.7          7          7    12.5   10.7    0.0   96.0  ld-linux-x86-64.so.2:__tunable_get_val
+   32  0x7ffff7fe691f    cond                   12    66.7          7          7    58.3   33.3    0.0   96.0  ld-linux-x86-64.so.2:_dl_mcount
+   33  0x7ffff7fd49f5    cond                  152    30.9          6          6     3.9   30.9    0.0   96.0  ld-linux-x86-64.so.2:_dl_fatal_printf
+   34  0x7ffff7fddcd0    cond                   18    66.7          6          6    33.3   33.3    0.0   96.0  ld-linux-x86-64.so.2:__tls_get_addr
+   35  0x7ffff7fd13c6    cond                   15    80.0          5          6    40.0   20.0    0.0   96.1  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   36  0x7ffff7fddcfd    cond                    7    42.9          6          6    85.7   42.9    0.0   96.1  ld-linux-x86-64.so.2:__tls_get_addr
+   37  0x7ffff7fddcdb    cond                   15    40.0          6          6    40.0   40.0    0.0   96.1  ld-linux-x86-64.so.2:__tls_get_addr
+   38  0x7ffff7fe6113    jmp_indirect            9   100.0          0          5    55.6      -    0.0   96.1  ld-linux-x86-64.so.2:_dl_mcount
+   39  0x7ffff7fddce0    cond                    9    33.3          5          5    55.6   33.3    0.0   96.1  ld-linux-x86-64.so.2:__tls_get_addr
+   40  0x7ffff7fdb657    cond                   30    16.7          5          5    16.7   16.7    0.0   96.1  ld-linux-x86-64.so.2:__tunable_get_val
