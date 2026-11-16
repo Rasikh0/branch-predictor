@@ -1,4 +1,4 @@
-# HW3: Branch Prediction with Pin
+# Branch Prediction with Pin
 
 A Pin tool that observes every control-flow instruction of a running x86-64
 program and simulates a front-end branch predictor (direction predictor, BTB
