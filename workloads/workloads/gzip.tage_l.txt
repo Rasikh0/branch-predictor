@@ -1,0 +1,91 @@
+bpred summary
+  Instructions executed: 152078684
+  Control-flow events:   37248461
+
+  type                  all code      main exe
+  cond                  34894893      34874336
+    cond taken          12267195      12258946
+  jmp_direct             1336521       1335656
+  jmp_indirect               386           153
+  call_direct             508221        507324
+  call_indirect              113            18
+  ret                     508327        507213
+  total                 37248461      37224700
+
+  Other control flow, not predicted: 0
+
+Predictor: tage_l
+  Bimodal base table                      8192   (4096 x 2)
+  Tagged tables                          43008   (6 x 512 x (3 ctr + 2 u + tag); histories 4,8,17,37,77,160; tags 8,8,9,9,10,10)
+  Global + path history                    176   (160 + 16)
+  Folded-history registers                 156   
+  USE_ALT + aging tick                      22   (4 + 18)
+  Loop predictor                           615   (16 x 38 + 7-bit USE_LOOP)
+  Direction predictor total              52169   
+  BTB                                    13824   (256 x (1 valid + 16 tag + 32 target + 3 type + 2 LRU), 64 sets x 4 ways
+  RAS                                     2055   (64 x 32 + 7-bit count)
+  Indirect target predictor              22030   (512 x (1 valid + 8 tag + 32 target + 2 LRU) + 14-bit path history, 128 sets x 4 ways, folded index; also uses 8 GHR bits)
+  Total                                  90078   (budget 98304: within)
+
+Prediction results
+  metric                                         count        MPKI
+  direction_mispredictions                     1533740     10.0852
+  wrong_next_pc_total                          1537974     10.1130
+    cause_direction                            1533162     10.0814
+    cause_btb_target                              4153      0.0273
+    cause_indirect_target                          267      0.0018
+    cause_return                                   392      0.0026
+    in_main_executable                         1535068     10.0939
+    cross_region_only                              222      0.0015
+  btb_alias_hits                                     0      0.0000
+  conditional_branches                        34894893
+  direction_accuracy_percent                     95.60
+  estimated_cpi                                 1.1517
+
+  Wrong next PC by type
+  type                executed       wrong   % wrong
+  cond                34894893     1534862      4.40
+  jmp_direct           1336521        1978      0.15
+  jmp_indirect             386         261     67.62
+  call_direct           508221         388      0.08
+  call_indirect            113          93     82.30
+  ret                   508327         392      0.08
+
+  TAGE provider (conditional branches)   predictions   TAGE wrong   wrong%
+    bimodal (no tag match)                   2305324        12452     0.54
+    table 1 (history 4)                      1947426        37611     1.93
+    table 2 (history 8)                      5062598       174751     3.45
+    table 3 (history 17)                     9665537       565477     5.85
+    table 4 (history 37)                     9931955       540000     5.44
+    table 5 (history 77)                     4504911       185846     4.13
+    table 6 (history 160)                    1477142        41695     2.82
+    alternate used for a weak provider: 1043219 of 34894893
+  Loop predictor overrode TAGE 28316 times, right 26204
+  RAS pushes 508334, pops 508327, overflows 0, underflows 0
+  Indirect target predictor lookups 412, hits 107
+
+Top 20 branches by wrong next PC (of 1537974 in total)
+  wrong% = wrong / executed. bias% (conditional branches) = how often the
+  branch goes its less common way, i.e. the error of always guessing its
+  common direction; wrong% near bias% means history isn't helping.
+    #  pc                type             executed  taken%  dir wrong      wrong  wrong%  bias%   %all   cum%  image:function
+    1  0x403673          cond              9465728    92.4     667332     667332     7.0    7.6   43.4   43.4  gzip:longest_match
+    2  0x40367d          cond               719530    61.7     179458     179458    24.9   38.3   11.7   55.1  gzip:longest_match
+    3  0x403650          cond              9465728     1.2     114850     114842     1.2    1.2    7.5   62.5  gzip:longest_match
+    4  0x403711          cond               265600    58.4     105857     105857    39.9   41.6    6.9   69.4  gzip:longest_match
+    5  0x4040ff          cond               165883    56.7      69877      69877    42.1   43.3    4.5   74.0  gzip:deflate
+    6  0x403c2d          cond               331477    78.3      64917      64917    19.6   21.7    4.2   78.2  gzip:deflate
+    7  0x403659          cond              9352453     0.6      55243      55237     0.6    0.6    3.6   81.8  gzip:longest_match
+    8  0x4036a8          cond               155175    27.7      42789      42789    27.6   27.7    2.8   84.5  gzip:longest_match
+    9  0x4036b6          cond               112193    39.0      37866      37866    33.8   39.0    2.5   87.0  gzip:longest_match
+   10  0x40329a          cond               241760    62.9      30411      30413    12.6   37.1    2.0   89.0  gzip:send_bits
+   11  0x4036c4          cond                68411    39.6      29375      29375    42.9   39.6    1.9   90.9  gzip:longest_match
+   12  0x409437          cond                96447    25.3      26350      26350    27.3   25.3    1.7   92.6  gzip:compress_block
+   13  0x403d28          cond                96447    25.3      26154      26153    27.1   25.3    1.7   94.3  gzip:deflate
+   14  0x403632          cond               167729    89.7      18341      18343    10.9   10.3    1.2   95.5  gzip:longest_match
+   15  0x4036d2          cond                41337    56.0      17726      17726    42.9   44.0    1.2   96.7  gzip:longest_match
+   16  0x403689          cond               275344     3.9      10689      10689     3.9    3.9    0.7   97.4  gzip:longest_match
+   17  0x40372b          cond               264705    33.2       8963       8963     3.4   33.2    0.6   97.9  gzip:longest_match
+   18  0x4036e0          cond                18182    54.3       8885       8885    48.9   45.7    0.6   98.5  gzip:longest_match
+   19  0x4036ee          cond                 8311    65.1       3156       3157    38.0   34.9    0.2   98.7  gzip:longest_match
+   20  0x409482          cond                72077    96.4       2643       2645     3.7    3.6    0.2   98.9  gzip:compress_block

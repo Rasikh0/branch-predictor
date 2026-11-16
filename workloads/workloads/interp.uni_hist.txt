@@ -1,0 +1,84 @@
+bpred summary
+  Instructions executed: 66542442
+  Control-flow events:   10735382
+
+  type                  all code      main exe
+  cond                   3719036       3701194
+    cond taken           1889777       1882209
+  jmp_direct             1754190       1753387
+  jmp_indirect           1753605       1753387
+  call_direct                795             4
+  call_indirect          1753483       1753386
+  ret                    1754273       1753393
+  total                 10735382      10714751
+
+  Other control flow, not predicted: 0
+
+Predictor: uni_hist
+  Local history table                    10240   (1024 x 10)
+  Local pattern table                     3072   (1024 x 3)
+  Global pattern table (gshare)          32768   (16384 x 2)
+  Choice table                            8192   (4096 x 2)
+  Global history register                   14   (1 x 14)
+  Direction predictor total              54286
+  Unified target table                   35214   (640 x (1 valid + 16 tag + 32 target + 3 type + 3 LRU) + 14-bit path history, 128 sets x 5 ways, every lookup uses (PC, history); context uses 8 GHR bits)
+  RAS                                     2055   (64 x 32 + 7-bit count)
+  Total                                  91555   (budget 98304: within)
+
+Prediction results
+  metric                                         count        MPKI
+  direction_mispredictions                       35015      0.5262
+  wrong_next_pc_total                           114426      1.7196
+    cause_direction                              34596      0.5199
+    cause_btb_target                              3811      0.0573
+    cause_indirect_target                        75203      1.1302
+    cause_return                                   816      0.0123
+    in_main_executable                          108397      1.6290
+    cross_region_only                                0      0.0000
+  btb_alias_hits                                     1      0.0000
+  conditional_branches                         3719036
+  direction_accuracy_percent                     99.06
+  estimated_cpi                                 1.0258
+
+  Wrong next PC by type
+  type                executed       wrong   % wrong
+  cond                 3719036       36712      0.99
+  jmp_direct           1754190         638      0.04
+  jmp_indirect         1753605       69456      3.96
+  call_direct              795         670     84.28
+  call_indirect        1753483        6134      0.35
+  ret                  1754273         816      0.05
+
+  RAS pushes 1754278, pops 1754273, overflows 0, underflows 0
+  Unified table at end of run (640 entries)
+    branch kind                  entries    branches    entries/branch
+    direct (cond, jmp, call)         445         278              1.60
+    indirect (jmp, call)              85          28              3.04
+    return                           110          73              1.51
+  Unified table lookups 10735382, second (dependent) probes 0
+
+Top 20 branches by wrong next PC (of 114426 in total)
+  wrong% = wrong / executed. bias% (conditional branches) = how often the
+  branch goes its less common way, i.e. the error of always guessing its
+  common direction; wrong% near bias% means history isn't helping.
+    #  pc                type             executed  taken%  dir wrong      wrong  wrong%  bias%   %all   cum%  image:function
+    1  0x401722          jmp_indirect      1753385   100.0          0      69276     4.0      -   60.5   60.5  interp:run_switch
+    2  0x401a8a          cond               194417    66.3      32892      32891    16.9   33.7   28.7   89.3  interp:op_jz
+    3  0x401b24          call_indirect     1753385   100.0          0       6036     0.3      -    5.3   94.6  interp:run_fnptr
+    4  0x7ffff7fd0146    cond                  646    92.6         73        334    51.7    7.4    0.3   94.9  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+    5  0x7ffff7fd442a    cond                 1679    36.6        285        289    17.2   36.6    0.3   95.1  ld-linux-x86-64.so.2:_dl_fatal_printf
+    6  0x7ffff7fed90e    ret                   163   100.0          0        134    82.2      -    0.1   95.2  ld-linux-x86-64.so.2:_dl_mcount
+    7  0x7ffff7fcf62e    cond                  203   100.0         14        131    64.5    0.0    0.1   95.3  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+    8  0x7ffff7fcf640    cond                  203   100.0          1        129    63.5    0.0    0.1   95.5  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+    9  0x7ffff7fcf658    cond                  203   100.0          1        129    63.5    0.0    0.1   95.6  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   10  0x7ffff7fcf886    cond                  211    56.4         95        101    47.9   43.6    0.1   95.7  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   11  0x7ffff7fec526    cond                  123    89.4         33         90    73.2   10.6    0.1   95.7  ld-linux-x86-64.so.2:_dl_mcount
+   12  0x7ffff7fd4436    cond                 1679    98.3         43         85     5.1    1.7    0.1   95.8  ld-linux-x86-64.so.2:_dl_fatal_printf
+   13  0x7ffff7fd4b4e    jmp_indirect          105   100.0          0         75    71.4      -    0.1   95.9  ld-linux-x86-64.so.2:_dl_fatal_printf
+   14  0x7ffff7fd01b9    jmp_direct             93   100.0          0         75    80.6      -    0.1   95.9  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   15  0x7ffff7fcf588    jmp_direct             93   100.0          0         75    80.6      -    0.1   96.0  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   16  0x7ffff7fd4b2f    cond                  104   100.0          4         74    71.2    0.0    0.1   96.1  ld-linux-x86-64.so.2:_dl_fatal_printf
+   17  0x7ffff7fd01f7    call_direct            93   100.0          0         73    78.5      -    0.1   96.1  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   18  0x7ffff7fd4b99    cond                  152    98.0          5         73    48.0    2.0    0.1   96.2  ld-linux-x86-64.so.2:_dl_fatal_printf
+   19  0x7ffff7fd0288    ret                    93   100.0          0         72    77.4      -    0.1   96.3  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
+   20  0x7ffff7fcf813    ret                    92   100.0          0         71    77.2      -    0.1   96.3  ld-linux-x86-64.so.2:_dl_rtld_di_serinfo
