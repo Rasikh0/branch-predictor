@@ -1,0 +1,52 @@
+bpred summary
+  Instructions executed: 117984
+  Control-flow events:   24441
+
+  type                  all code      main exe
+  cond                     21595             9
+    cond taken              8712             7
+  jmp_direct                 834             3
+  jmp_indirect               213             2
+  call_direct                789            12
+  call_indirect              113             1
+  ret                        897            16
+  total                    24441            43
+
+  Other control flow, not predicted: 0
+
+Predictor: baseline
+  Local history table                    10240   (1024 x 10)
+  Local pattern table                     3072   (1024 x 3)
+  Global pattern table                    8192   (4096 x 2)
+  Choice table                            8192   (4096 x 2)
+  Global history register                   12   (1 x 12)
+  Direction predictor total              29708
+  BTB                                    13312   (256 x (1 valid + 16 tag + 32 target + 3 type), 256 sets x 1 ways
+  RAS                                      517   (16 x 32 + 5-bit count)
+  Total                                  43537   (budget 98304: within)
+
+Prediction results
+  metric                                         count        MPKI
+  direction_mispredictions                        2239     18.9771
+  wrong_next_pc_total                             3331     28.2326
+    cause_direction                               1963     16.6378
+    cause_btb_target                               932      7.8994
+    cause_indirect_target                           94      0.7967
+    cause_return                                   342      2.8987
+    in_main_executable                              31      0.2627
+    cross_region_only                                0      0.0000
+  btb_alias_hits                                     0      0.0000
+  conditional_branches                           21595
+  direction_accuracy_percent                     89.63
+  estimated_cpi                                 1.4235
+
+  Wrong next PC by type
+  type                executed       wrong   % wrong
+  cond                   21595        2191     10.15
+  jmp_direct               834         334     40.05
+  jmp_indirect             213          77     36.15
+  call_direct              789         294     37.26
+  call_indirect            113          93     82.30
+  ret                      897         342     38.13
+
+  RAS pushes 902, pops 897, overflows 0, underflows 0

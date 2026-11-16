@@ -1,0 +1,15 @@
+bpred summary
+  Instructions executed: 117176
+  Control-flow events:   24243
+
+  type                  all code      main exe
+  cond                     21458            25
+    cond taken              8694            19
+  jmp_direct                 825             3
+  jmp_indirect               209             2
+  call_direct                774             3
+  call_indirect              104             1
+  ret                        873             7
+  total                    24243            41
+
+  Other control flow, not predicted: 0
